@@ -77,7 +77,7 @@ class Caballos
         {
             avances[i] = 0;
         }
-        
+
         // Se define un array de hilos para los 4 caballos
         Thread[] caballo = new Thread[caballos];
 
@@ -135,7 +135,7 @@ class Caballos
             avances[i] = 0;
         }
 
-        Console.WriteLine("Juego reiniciado.");
+        Console.WriteLine("Juego reiniciado. Volviendo al menú principal...");
     }
 
     static void Correr(object id) // El parámetro id es de tipo object
@@ -178,10 +178,9 @@ class Caballos
                 }
 
             }
+
+            // Pausa breve para que la consola imprima los avances de forma legible
+            Thread.Sleep(500); // 1 segundo de pausa entre cada tirada
         }
-
     }
-
-
-
 }

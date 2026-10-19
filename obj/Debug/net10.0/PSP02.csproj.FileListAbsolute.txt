@@ -1,0 +1,15 @@
+/Users/mirja/PSP02/bin/Debug/net10.0/PSP02
+/Users/mirja/PSP02/bin/Debug/net10.0/PSP02.deps.json
+/Users/mirja/PSP02/bin/Debug/net10.0/PSP02.runtimeconfig.json
+/Users/mirja/PSP02/bin/Debug/net10.0/PSP02.dll
+/Users/mirja/PSP02/bin/Debug/net10.0/PSP02.pdb
+/Users/mirja/PSP02/obj/Debug/net10.0/PSP02.GeneratedMSBuildEditorConfig.editorconfig
+/Users/mirja/PSP02/obj/Debug/net10.0/PSP02.AssemblyInfoInputs.cache
+/Users/mirja/PSP02/obj/Debug/net10.0/PSP02.AssemblyInfo.cs
+/Users/mirja/PSP02/obj/Debug/net10.0/PSP02.csproj.CoreCompileInputs.cache
+/Users/mirja/PSP02/obj/Debug/net10.0/PSP02.sourcelink.json
+/Users/mirja/PSP02/obj/Debug/net10.0/PSP02.dll
+/Users/mirja/PSP02/obj/Debug/net10.0/refint/PSP02.dll
+/Users/mirja/PSP02/obj/Debug/net10.0/PSP02.pdb
+/Users/mirja/PSP02/obj/Debug/net10.0/PSP02.genruntimeconfig.cache
+/Users/mirja/PSP02/obj/Debug/net10.0/ref/PSP02.dll
