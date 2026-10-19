@@ -34,8 +34,13 @@ class Caballos
         for (int i = 0; i < caballos; i++)
         {
             caballo[i] = new Thread(Correr);
+
             // Se asigna una prioridad a cada caballo según el array de prioridades
             caballo[i].Priority = prioridades[i];
+
+            // Start toma como parámetro un object, el índice del caballo,
+            // que recibe como parámetro el método Correr, para que cada hilo/caballo 
+            // pueda saber cuando está corriendo qué caballo es y guardar sus avances
             caballo[i].Start(i);
         }
 
@@ -51,10 +56,10 @@ class Caballos
         // Cuando acaba el juego, se muestran el caballo ganador
         // y la posición de cada caballo en el carril/podium 
         // Se suma 1 a caballoGanador para que no se muestre el índice 0
-        Console.WriteLine("El caballo ganador ha sido el {0}", caballoGanador + 1);
+        Console.WriteLine("Ganador: Caballo {0}", caballoGanador + 1);
         for (int i = 0; i < caballos; i++)
         {
-            Console.WriteLine("El caballo {0} ha avanzado {1} metros", i + 1, avances[i]);
+            Console.WriteLine("Caballo {0}: {1}", i + 1, avances[i]);
         } 
     }
 
@@ -80,7 +85,8 @@ class Caballos
             // en cada jugada. Se controla con un lock.
             lock (bloquear)
             {
-                if (!carreraTerminada) // Doble comprobación de seguridad dentro del lock
+                if (!carreraTerminada) // Doble comprobación de seguridad dentro del lock,
+                // por si otro caballo ha cruzado la meta mientras este caballo estaba esperando su turno
                 {
                     avances[idCaballo] += avance;
                     Console.WriteLine("Soy el caballo {0} y el valor de avance hasta el momento es de {1} m", idCaballo + 1, avances[idCaballo]);
