@@ -3,11 +3,18 @@ using System.Threading;
 
 class Caballos
 {
+    // Hay 4 hilos o caballos que corren en paralelo, cada uno con su propio avance
     static int caballos = 4;
+    // La longitud de la carrera es de 200 metros
     static int longitud = 200;
-    static int maxAvance = longitud / 10; // El 10% de la longitud
+    // El avance máximo de un caballo en una tirada es del 10% de la longitud total
+    static int maxAvance = longitud / 10; 
+    // El array avances guarda el avance de cada caballo, que se inicializa a 0
     static int[] avances = new int[caballos];
+    // Objeto Random para generar números aleatorios
     static Random rnd = new Random();
+    // Objeto para block en la sección de avanzar del método Correr, 
+    // para que solo un caballo pueda avanzar a la vez
     static object bloquear = new object();
     // Variable global para saber si la carrera ha terminado
     static bool carreraTerminada = false;
@@ -18,6 +25,59 @@ class Caballos
 
     static void Main(string[] args)
     {
+        int opcion = 0;
+
+        // Bucle para mostrar el menú de la consola repetidamente hasta elegir Salir (3)
+        while (opcion != 3)
+        {
+            Console.WriteLine("\n==================================");
+            Console.WriteLine("    MENÚ - CARRERA DE CABALLOS    ");
+            Console.WriteLine("==================================");
+            Console.WriteLine("1. Empezar juego");
+            Console.WriteLine("2. Reiniciar juego");
+            Console.WriteLine("3. Salir del juego");
+            Console.Write("Elige una opción: ");
+
+            // Se lee la opción elegida por el usuario
+            if (int.TryParse(Console.ReadLine(), out opcion))
+            {
+                switch (opcion)
+                {
+                    case 1:
+                        // Se llama al método para iniciar la carrera
+                        IniciarCarrera();
+                        break;
+                    case 2:
+                        // Se reinicia la carrera
+                        ReiniciarCarrera();
+                        break;
+                    case 3:
+                        Console.WriteLine("Saliendo del juego...");
+                        break;
+                    default:
+                        Console.WriteLine("Opción no válida. Por favor, elige 1, 2 o 3.");
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Entrada no válida. Por favor, introduce un número.");
+            }
+        }
+    }
+
+    static void IniciarCarrera()
+    {
+        // Se reinician las variables globales por si venimos de otra partida
+        // (los hilos mueren con la partida al acabar de ejecutarse el método Correr,
+        // pero las variables globales siguen con los valores de la última partida)
+        carreraTerminada = false;
+        caballoGanador = -1;
+        for (int i = 0; i < caballos; i++)
+        {
+            avances[i] = 0;
+        }
+        
         // Se define un array de hilos para los 4 caballos
         Thread[] caballo = new Thread[caballos];
 
@@ -63,6 +123,21 @@ class Caballos
         } 
     }
 
+    static void ReiniciarCarrera()
+    {
+        // Se reinician las variables globales para poder volver a jugar
+        carreraTerminada = false;
+        caballoGanador = -1;
+
+        // Se reinicia el array de avances a 0 para todos los caballos
+        for (int i = 0; i < caballos; i++)
+        {
+            avances[i] = 0;
+        }
+
+        Console.WriteLine("Juego reiniciado.");
+    }
+
     static void Correr(object id) // El parámetro id es de tipo object
     {
         // Se usa (int)id para convertir ("casting")
@@ -72,8 +147,8 @@ class Caballos
         // Mientras la carrera NO haya terminado y el caballo no llegue a la meta
         while (!carreraTerminada && avances[idCaballo] < longitud)
         {
-            // Se crea un valor aleatorio por cada caballo 
-            // y se avanza dicho valor en la longitud del circuito.
+            // Se crea un valor aleatorio por cada caballo para luego avanzar 
+            // dicho valor en la longitud del circuito (dentro del lock).
             // El valor del random en cada tirada, gracias a maxAvance,
             // no puede ser superior al 10% de la longitud.
             // El método Next genera un número aleatorio desde el primer número 
@@ -82,14 +157,15 @@ class Caballos
             int avance = rnd.Next(1, maxAvance + 1); // Un número aleatorio entre 1 y el máximo permitido
             
             // Solo un caballo puede cruzar la meta 
-            // en cada jugada. Se controla con un lock.
+            // en cada jugada. Se controla con un lock
+            // sobre cada avance.
             lock (bloquear)
             {
                 if (!carreraTerminada) // Doble comprobación de seguridad dentro del lock,
                 // por si otro caballo ha cruzado la meta mientras este caballo estaba esperando su turno
                 {
                     avances[idCaballo] += avance;
-                    Console.WriteLine("Soy el caballo {0} y el valor de avance hasta el momento es de {1} m", idCaballo + 1, avances[idCaballo]);
+                    Console.WriteLine("Soy el caballo{0} y el valor de avance hasta el momento es de {1} m", idCaballo + 1, avances[idCaballo]);
 
                     // Si este caballo alcanza o supera la longitud total,
                     // se da por terminada la carrera
@@ -105,5 +181,7 @@ class Caballos
         }
 
     }
+
+
 
 }
