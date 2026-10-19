@@ -11,21 +11,34 @@ class Caballos
     static object bloquear = new object();
     // Variable global para saber si la carrera ha terminado
     static bool carreraTerminada = false;
-    // Variable globar para guardar el caballo ganador
-    // Se inicializa a -1 para no confundir el valor inicial
+    // Variable global para guardar el caballo ganador
+    // Se inicializa a -1 para no confundir su valor inicial
     // con el índice de ningún caballo
     static int caballoGanador = -1;
 
     static void Main(string[] args)
     {
+        // Se define un array de hilos para los 4 caballos
         Thread[] caballo = new Thread[caballos];
+
+        // Se define un array con las prioridades de los 4 caballos
+        ThreadPriority[] prioridades = { 
+            ThreadPriority.Highest, 
+            ThreadPriority.Normal, 
+            ThreadPriority.Lowest, 
+            ThreadPriority.AboveNormal 
+        };
+
         // Primero Start de todos los hilos y luego Join de todos,  
         // para ejecución paralela (simultánea) de los hilos
         for (int i = 0; i < caballos; i++)
         {
             caballo[i] = new Thread(Correr);
+            // Se asigna una prioridad a cada caballo según el array de prioridades
+            caballo[i].Priority = prioridades[i];
             caballo[i].Start(i);
         }
+
         // El Main espera a que dejen de correr los 4 caballos 
         // para imprimir el ganador y el podio, pero los
         // caballos no se esperan entre sí (corren independientemente
@@ -37,12 +50,12 @@ class Caballos
 
         // Cuando acaba el juego, se muestran el caballo ganador
         // y la posición de cada caballo en el carril/podium 
-        Console.WriteLine("El caballo ganador ha sido el {0}", );
+        // Se suma 1 a caballoGanador para que no se muestre el índice 0
+        Console.WriteLine("El caballo ganador ha sido el {0}", caballoGanador + 1);
         for (int i = 0; i < caballos; i++)
         {
             Console.WriteLine("El caballo {0} ha avanzado {1} metros", i + 1, avances[i]);
         } 
-
     }
 
     static void Correr(object id) // El parámetro id es de tipo object
@@ -70,13 +83,13 @@ class Caballos
                 if (!carreraTerminada) // Doble comprobación de seguridad dentro del lock
                 {
                     avances[idCaballo] += avance;
-                    Console.WriteLine("Soy el caballo {0} y he avanzado {1} metros", idCaballo + 1, avance);
+                    Console.WriteLine("Soy el caballo {0} y el valor de avance hasta el momento es de {1} m", idCaballo + 1, avances[idCaballo]);
 
                     // Si este caballo alcanza o supera la longitud total,
                     // se da por terminada la carrera
                     if (avances[idCaballo] >= longitud)
                     {
-                        carreraTerminada = true; // Se acabó la carrera para todos
+                        carreraTerminada = true; // Se acaba la carrera para todos
                         // Se guarda el caballo ganador en la variable global
                         caballoGanador = idCaballo;
                     }
